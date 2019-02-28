@@ -3,5 +3,5 @@ module.exports = (req, res, next) => {
     return next()
   }
 
-  return res.redirect('/app/dashboard')
+  return res.json({ error: 'não autenticado' })
 }
