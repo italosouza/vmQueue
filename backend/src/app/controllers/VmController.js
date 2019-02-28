@@ -7,9 +7,8 @@ class VmController {
   }
 
   async store(req, res) {
-    const { filename: avatar } = req.file
-    await Vm.create({ ...req.body, avatar })
-    return res.json('store')
+    await Vm.create(req.body)
+    return res.json(req.body)
   }
 }
 
