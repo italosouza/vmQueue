@@ -9,6 +9,7 @@ const io = require('socket.io')(http)
 const uuidv4 = require('uuid/v4')
 
 io.on('connection', function(socket) {
+  console.log('Nova conexão estabelecida.')
   socket.on('add user', username => {
     const user = { _id: uuidv4(), username: username, numUsers: 1 }
     socket.user = user

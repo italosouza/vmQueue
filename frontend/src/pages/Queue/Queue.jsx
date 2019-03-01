@@ -6,9 +6,9 @@ import socket from 'socket.io-client'
 import Vm from 'components/Vm'
 
 // import twitterLogo from 'twitter.svg'
-import './Timeline.css'
+// import './Timeline.css'
 
-export default class Timeline extends Component {
+export default class Queue extends Component {
   state = {
     vm: [],
     queue: []

@@ -1,7 +1,7 @@
 const { User } = require('../models')
 
 class SessionController {
-  async store(req, res) {
+  async login(req, res) {
     const { email, password } = req.body
 
     const user = await User.findOne({ where: { email } })
