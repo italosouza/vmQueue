@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import Login from 'pages/Login'
 import Timeline from 'pages/Timeline'
+import Queue from 'pages/Queue'
 
 class App extends Component {
   render() {
@@ -10,6 +11,7 @@ class App extends Component {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Login} />
+          <Route path="/queue" component={Queue} />
           <Route path="/timeline" component={Timeline} />
         </Switch>
       </BrowserRouter>

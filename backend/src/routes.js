@@ -14,13 +14,13 @@ const QueueController = require('./app/controllers/QueueController')
 
 // acesso public
 // routes.get('/', guestMiddleware, SessionController.create)
-routes.post('/login', SessionController.store)
+// routes.post('/login', SessionController.login)
 
 routes.get('/files/:file', FileController.show)
 routes.post('/user', upload.single('avatar'), UserController.store)
 
 // acesso somente autorizado
-routes.use('/app', authMiddleware)
+// routes.use('/app', authMiddleware)
 
 // vm
 routes.get('/app/vm', VmController.index)

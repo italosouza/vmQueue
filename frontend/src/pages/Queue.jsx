@@ -2,21 +2,23 @@ import React, { Component } from 'react'
 import api from 'services/api'
 import socket from 'socket.io-client'
 
-import Tweet from 'components/Tweet'
+// import Tweet from 'components/Tweet'
+import Vm from 'components/Vm'
 
-import twitterLogo from 'twitter.svg'
+// import twitterLogo from 'twitter.svg'
 import './Timeline.css'
 
 export default class Timeline extends Component {
   state = {
-    tweets: [],
-    newTweet: ''
+    vm: [],
+    queue: []
   }
 
   async componentDidMount() {
     this.subscribeToEvents()
-    const response = await api.get('tweets')
-    this.setState({ tweets: response.data })
+    const vms = await api.get('/app/vm')
+    const queues = await api.get('/app/queue')
+    this.setState({ vm: vms.data, queue: queues.data })
   }
 
   subscribeToEvents = () => {
@@ -57,19 +59,22 @@ export default class Timeline extends Component {
   render() {
     return (
       <div className="timeline-wrapper">
-        <img height={24} src={twitterLogo} alt="GoTwitter" />
         <form>
-          <textarea
+          {/* <textarea
             value={this.state.newTweet}
             onChange={this.handleInputChange}
             onKeyDown={this.handleNewTweet}
             placeholder="O que está acontecendo"
-          />
+          /> */}
         </form>
-
         <ul className="tweet-list">
-          {this.state.tweets.map((tweet, i) => (
-            <Tweet key={i} tweet={tweet} />
+          {this.state.vm.map((maquina, i) => (
+            <Vm key={i} vm={maquina} />
+          ))}
+        </ul>
+        <ul className="tweet-list">
+          {this.state.queue.map((tweet, i) => (
+            <Vm key={i} tweet={tweet} />
           ))}
         </ul>
       </div>

@@ -17,11 +17,16 @@ io.on('connection', function(socket) {
   })
 
   socket.on('new message', data => {
-    io.emit('new message', { username: socket.user.username, message: data })
+    const message = { username: socket.user.username, message: data }
+    if (server.isDev) {
+      console.log(message)
+    }
+
+    io.emit('new message', message)
   })
 
   socket.on('disconnect', () => {
-    console.log(`${socket.user.username} desconectou-se.`)
+    console.log(`${socket.user} desconectou-se.`)
   })
 })
 

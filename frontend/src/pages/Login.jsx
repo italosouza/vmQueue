@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import twitterLogo from 'twitter.svg'
 import './Login.css'
 
 export default class Login extends Component {
@@ -18,18 +17,17 @@ export default class Login extends Component {
 
     if (!username) return
     localStorage.setItem('@GoTwitter:username', username)
-    this.props.history.push('/timeline')
+    this.props.history.push('/queue')
   }
 
   render() {
     return (
       <div className="login-wrapper">
-        <img src={twitterLogo} alt="GoTwitter" />
         <form onSubmit={this.handleSubmit}>
           <input
             value={this.state.username}
             onChange={this.handleInputChange}
-            placeholder="Nome do usuario"
+            placeholder="Seu nome é?"
           />
           <button type="submit">Entrar</button>
         </form>
