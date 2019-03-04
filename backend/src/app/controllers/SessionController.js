@@ -1,27 +1,19 @@
-const { User } = require('../models')
+const User = require('../models/User')
 
 class SessionController {
-  async login(req, res) {
+  async store(req, res) {
     const { email, password } = req.body
 
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ email })
     if (!user) {
-      return res.json({ error: 'Usuário não encontrado' })
+      return res.status(400).json({ error: 'Usuário não encontrado.' })
     }
 
-    if (!(await user.checkPassword(password))) {
-      return res.json({ error: 'Senha inválida' })
+    if (!(await user.compareHash(password))) {
+      return res.status(400).json({ error: 'Senha inválida' })
     }
 
-    req.session.user = user
-    return res.json({ ...user, password: '' })
-  }
-
-  destroy(req, res) {
-    req.session.destroy(() => {
-      res.clearCookie('root')
-      return res.json({ error: '' })
-    })
+    return res.json({ user, token: User.generateToken(user) })
   }
 }
 

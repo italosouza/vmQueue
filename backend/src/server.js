@@ -1,39 +1,28 @@
 const express = require('express')
-const session = require('express-session')
-const FileStore = require('session-file-store')(session)
+const mongoose = require('mongoose')
+const databaseConfig = require('./config/database')
 
-const path = require('path')
-const cors = require('cors')
+// const cors = require('cors')
 
 class App {
   constructor() {
     this.express = express()
     this.isDev = process.env.NODE_ENV !== 'production'
 
+    this.database()
     this.middlewares()
-    this.views()
     this.routes()
   }
 
-  middlewares() {
-    this.express.use(express.urlencoded({ extended: false }))
-
-    this.express.use(
-      session({
-        name: 'root',
-        secret: 'MyApp',
-        resave: false,
-        store: new FileStore({
-          path: path.resolve(__dirname, '..', 'tmp', 'sessions')
-        }),
-        saveUninitialized: true
-      })
-    )
-    this.express.use(cors())
+  database() {
+    mongoose.connect(databaseConfig.uri, {
+      useCreateIndex: true,
+      useNewUrlParser: true
+    })
   }
 
-  views() {
-    this.express.use(express.static(path.resolve(__dirname, 'public')))
+  middlewares() {
+    this.express.use(express.json())
   }
 
   routes() {

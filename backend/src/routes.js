@@ -1,39 +1,38 @@
 const express = require('express')
-const multerConfig = require('./config/multer')
-const upload = require('multer')(multerConfig)
 const routes = express.Router()
 
-const authMiddleware = require('./app/middleware/auth')
-const guestMiddleware = require('./app/middleware/guest')
+// const multerConfig = require('./config/multer')
+// const upload = require('multer')(multerConfig)
 
-const FileController = require('./app/controllers/FileController')
-const VmController = require('./app/controllers/VmController')
-const UserController = require('./app/controllers/UserController')
-const SessionController = require('./app/controllers/SessionController')
-const QueueController = require('./app/controllers/QueueController')
+const authMiddleware = require('./app/middlewares/auth')
+const controllers = require('./app/controllers')
 
-// acesso public
-// routes.get('/', guestMiddleware, SessionController.create)
-routes.post('/login', SessionController.login)
+// usuario - create and login
+routes.post('/user', controllers.UserController.store)
+routes.post('/session', controllers.SessionController.store)
 
-routes.get('/files/:file', FileController.show)
-routes.post('/user', upload.single('avatar'), UserController.store)
+// routes.post('/user', upload.single('avatar'), controllers.UserController.store)
+// routes.get('/files/:file', controllers.FileController.show)
 
-// acesso somente autorizado
-// routes.use('/app', authMiddleware)
+// rotas a sequir requerem Token de autenticação
+routes.use(authMiddleware)
 
 // vm
-routes.get('/app/vm', VmController.index)
-routes.post('/app/vm', VmController.store)
-routes.post('/app/vm/join/:id', VmController.join)
-routes.post('/app/vm/leav/:id', VmController.leave)
+routes.get('/vm', controllers.VmController.index)
+routes.get('/vm/:id', controllers.VmController.show)
+routes.post('/vm', controllers.VmController.store)
+routes.put('/vm/:id', controllers.VmController.update)
+routes.delete('/vm/:id', controllers.VmController.destroy)
 
-// user
-routes.get('/app/user', UserController.index)
-routes.post('/app/user', UserController.store)
+routes.post('/vm/join/:id', controllers.VmController.join)
+routes.post('/vm/leave/:id', controllers.VmController.leave)
+
+// user -
+// routes.get('/user', controllers.UserController.index)
 
 // queue
-routes.get('/app/queue', QueueController.index)
-routes.post('/app/queue', QueueController.store)
+routes.get('/queue', controllers.QueueController.index)
+routes.post('/queue/join', controllers.QueueController.join)
+routes.post('/queue/leave', controllers.QueueController.leave)
 
 module.exports = routes

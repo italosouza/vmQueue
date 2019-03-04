@@ -1,32 +1,75 @@
-const { Vm } = require('../models')
+const Vm = require('../models/Vm')
 
 class VmController {
   async index(req, res) {
-    const lista = await Vm.findAll()
-    return res.json(lista)
+    const filters = {}
+
+    if (req.query.available) {
+      filters.available = req.query.available
+    }
+
+    if (req.query.name) {
+      filters.name = new RegExp(req.query.name, 'i')
+    }
+
+    const list = await Vm.paginate(filters, {
+      page: req.query.page || 1,
+      limit: 20,
+      populate: ['user'],
+      sort: '-createdAt'
+    })
+
+    return res.json(list)
+  }
+
+  async show(req, res) {
+    const model = await Vm.findById(req.params.id)
+
+    return res.json(model)
   }
 
   async store(req, res) {
-    await Vm.create(req.body)
-    return res.json(req.body)
+    const model = await Vm.create(req.body)
+
+    return res.json(model)
+  }
+
+  async update(req, res) {
+    const model = await Vm.findByIdAndUpdate(req.params.id, req.body, {
+      new: true
+    })
+
+    return res.json(model)
+  }
+
+  async destroy(req, res) {
+    await Vm.findByIdAndDelete(req.params.id)
+
+    return res.send()
   }
 
   async join(req, res) {
-    const vm = await Vm.findById(req.params.id)
+    const model = await Vm.findByIdAndUpdate(
+      req.params.id,
+      { user: req.userId, available: false },
+      {
+        new: true
+      }
+    )
 
-    vm.user_id = req.body.user_id
-
-    await vm.save()
-    return res.json(vm)
+    return res.json(model)
   }
 
   async leave(req, res) {
-    const vm = await Vm.findById(req.params.id)
+    const model = await Vm.findByIdAndUpdate(
+      req.params.id,
+      { user: null, available: true },
+      {
+        new: true
+      }
+    )
 
-    vm.user_id = ''
-
-    await vm.save()
-    return res.json(vm)
+    return res.json(model)
   }
 }
 

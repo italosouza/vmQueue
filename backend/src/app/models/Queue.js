@@ -1,16 +1,18 @@
-module.exports = (sequelize, DataTypes) => {
-  const Queue = sequelize.define(
-    'Queue',
-    {},
-    {
-      freezeTableName: true,
-      tableName: 'queue'
-    }
-  )
+const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate')
 
-  Queue.associate = models => {
-    Queue.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' })
+const QueueSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
+})
 
-  return Queue
-}
+QueueSchema.plugin(mongoosePaginate)
+
+module.exports = mongoose.model('Queue', QueueSchema)

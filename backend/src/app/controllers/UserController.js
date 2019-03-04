@@ -1,15 +1,15 @@
-const { User } = require('../models')
+const User = require('../models/User')
 
 class UserController {
-  async index(req, res) {
-    const lista = await User.findAll()
-    return res.json(lista)
-  }
-
   async store(req, res) {
-    const { filename: avatar } = req.file
-    await User.create({ ...req.body, avatar })
-    return res.json({ message: 'ok' })
+    const { email } = req.body
+
+    if (await User.findOne({ email })) {
+      return res.status(400).json({ error: 'Usu�rio j� cadastrado' })
+    }
+
+    const user = await User.create(req.body)
+    return res.json(user)
   }
 }
 
