@@ -1,5 +1,8 @@
 const Vm = require('../models/Vm')
 
+const QueueJob = require('../jobs/QueueJob')
+const Queue = require('../services/Queue')
+
 class VmController {
   async index(req, res) {
     const filters = {}
@@ -68,6 +71,10 @@ class VmController {
         new: true
       }
     )
+
+    Queue.create(QueueJob.key, {
+      vm: model
+    }).save()
 
     return res.json(model)
   }

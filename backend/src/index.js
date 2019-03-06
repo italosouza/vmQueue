@@ -1,8 +1,9 @@
 // application server
-const server = require('./server')
+const appServer = require('./server')
 
 // http server - used with socket.io
-var http = require('http').Server(server.express)
+var http = require('http').Server(appServer.express)
+require('./ioServer')(http, appServer)
 
 // configuração do socket.io
 // const io = require('socket.io')(http)
