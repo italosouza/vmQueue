@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
+const path = require('path')
 
 const mongoose = require('mongoose')
 const databaseConfig = require('./config/database')
@@ -19,7 +20,7 @@ class App {
     this.sentry()
     this.database()
     this.middlewares()
-    this.routes()
+    // this.routes()
     this.exception()
   }
 
@@ -33,6 +34,7 @@ class App {
   middlewares() {
     this.express.use(express.json())
     this.express.use(Sentry.Handlers.requestHandler())
+    this.express.use(express.static(path.resolve(__dirname, 'public')))
   }
 
   routes() {

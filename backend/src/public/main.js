@@ -235,6 +235,25 @@ $(function() {
     addChatMessage(tweet)
   })
 
+  socket.on('join queue', data => {
+    const tweet = { username: 'SysOp', message: `${data.user.name} entrou na fila de espera.` }
+    addChatMessage(tweet)
+  })
+
+  socket.on('leave queue', data => {
+    const tweet = {
+      username: 'SysOp',
+      message: `${data.user.name} não precisa mais de uma VM e saiu da fila de espera.`
+    }
+    addChatMessage(tweet)
+  })
+
+  socket.on('vm available', data => {
+    console.log(data)
+    const tweet = { username: 'SysOp', message: `@user temos uma nova VM disponível para uso.` }
+    addChatMessage(tweet)
+  })
+
   socket.on('like', data => {
     log(`Um post do ${data.author} ganhou uma curtida`)
   })

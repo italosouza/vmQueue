@@ -1,4 +1,5 @@
 const Queue = require('../models/Queue')
+const User = require('../models/User')
 
 class QueueController {
   async index(req, res) {
@@ -21,7 +22,10 @@ class QueueController {
   }
 
   async leave(req, res) {
-    await Queue.findOneAndDelete({ user: req.userId })
+    const model = await Queue.findOneAndDelete({ user: req.userId })
+
+    const user = await User.findById(model.user)
+    req.io.emit('leave queue', { user: user })
 
     return res.send()
   }
@@ -31,8 +35,11 @@ class QueueController {
       return res.send()
     }
     const model = await Queue.create({ ...req.body, user: req.userId })
+    const queue = await Queue.findById(model._id).populate('user')
 
-    return res.json(model)
+    req.io.emit('join queue', queue)
+
+    return res.json(queue)
   }
 }
 
