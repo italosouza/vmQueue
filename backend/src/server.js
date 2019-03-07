@@ -20,7 +20,7 @@ class App {
     this.sentry()
     this.database()
     this.middlewares()
-    // this.routes()
+    // this.routes() //routes must be defined after socket.io
     this.exception()
   }
 

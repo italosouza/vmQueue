@@ -24,8 +24,14 @@ class QueueController {
   async leave(req, res) {
     const model = await Queue.findOneAndDelete({ user: req.userId })
 
+    if (!model) {
+      return res.send()
+    }
+
     const user = await User.findById(model.user)
-    req.io.emit('leave queue', { user: user })
+
+    model.user = user
+    req.io.emit('queue leave', model)
 
     return res.send()
   }
@@ -34,10 +40,11 @@ class QueueController {
     if (await Queue.findOne({ user: req.userId })) {
       return res.send()
     }
+
     const model = await Queue.create({ ...req.body, user: req.userId })
     const queue = await Queue.findById(model._id).populate('user')
 
-    req.io.emit('join queue', queue)
+    req.io.emit('queue join', queue)
 
     return res.json(queue)
   }

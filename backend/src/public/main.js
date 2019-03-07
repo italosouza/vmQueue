@@ -235,12 +235,14 @@ $(function() {
     addChatMessage(tweet)
   })
 
-  socket.on('join queue', data => {
+  socket.on('queue join', data => {
+    console.log(data)
     const tweet = { username: 'SysOp', message: `${data.user.name} entrou na fila de espera.` }
     addChatMessage(tweet)
   })
 
-  socket.on('leave queue', data => {
+  socket.on('queue leave', data => {
+    console.log(data)
     const tweet = {
       username: 'SysOp',
       message: `${data.user.name} não precisa mais de uma VM e saiu da fila de espera.`
@@ -248,9 +250,21 @@ $(function() {
     addChatMessage(tweet)
   })
 
-  socket.on('vm available', data => {
+  socket.on('vm leave', data => {
     console.log(data)
-    const tweet = { username: 'SysOp', message: `@user temos uma nova VM disponível para uso.` }
+    const tweet = {
+      username: 'SysOp',
+      message: `VM '${data.name}' liberada, atenção próximo da fila.`
+    }
+    addChatMessage(tweet)
+  })
+
+  socket.on('vm join', data => {
+    console.log(data)
+    const tweet = {
+      username: 'SysOp',
+      message: `Vm '${data.name}' está sendo usada agora.`
+    }
     addChatMessage(tweet)
   })
 

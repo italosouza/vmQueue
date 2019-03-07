@@ -52,6 +52,10 @@ class VmController {
   }
 
   async join(req, res) {
+    if (await Vm.findOne({ user: req.userId })) {
+      return res.send()
+    }
+
     const model = await Vm.findByIdAndUpdate(
       req.params.id,
       { user: req.userId, available: false },
@@ -59,6 +63,8 @@ class VmController {
         new: true
       }
     )
+
+    req.io.emit('vm join', model)
 
     return res.json(model)
   }
@@ -75,6 +81,8 @@ class VmController {
     Queue.create(QueueJob.key, {
       vm: model
     }).save()
+
+    req.io.emit('vm leave', model)
 
     return res.json(model)
   }
