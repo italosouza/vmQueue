@@ -1,7 +1,8 @@
 const Vm = require('../models/Vm')
+const Queue = require('../models/Queue')
 
 const QueueJob = require('../jobs/QueueJob')
-const Queue = require('../services/Queue')
+const QueueService = require('../services/Queue')
 
 class VmController {
   async index(req, res) {
@@ -56,6 +57,13 @@ class VmController {
       return res.send()
     }
 
+    const queue = await Queue.findOne({ user: req.userId }).populate('user')
+    console.log(queue)
+
+    if (!queue) {
+      return res.json({ error: 'Usuário não estava na fila' })
+    }
+
     const model = await Vm.findByIdAndUpdate(
       req.params.id,
       { user: req.userId, available: false },
@@ -64,7 +72,10 @@ class VmController {
       }
     )
 
+    await Queue.findByIdAndDelete(queue._id)
+
     req.io.emit('vm join', model)
+    req.io.emit('queue leave', queue)
 
     return res.json(model)
   }
@@ -78,7 +89,7 @@ class VmController {
       }
     )
 
-    Queue.create(QueueJob.key, {
+    QueueService.create(QueueJob.key, {
       vm: model
     }).save()
 

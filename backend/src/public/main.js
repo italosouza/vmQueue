@@ -245,7 +245,7 @@ $(function() {
     console.log(data)
     const tweet = {
       username: 'SysOp',
-      message: `${data.user.name} não precisa mais de uma VM e saiu da fila de espera.`
+      message: `${data.user.name} saiu da fila de espera.`
     }
     addChatMessage(tweet)
   })
