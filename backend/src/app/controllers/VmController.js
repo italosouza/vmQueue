@@ -58,7 +58,6 @@ class VmController {
     }
 
     const queue = await Queue.findOne({ user: req.userId }).populate('user')
-    console.log(queue)
 
     if (!queue) {
       return res.json({ error: 'Usuário não estava na fila' })
