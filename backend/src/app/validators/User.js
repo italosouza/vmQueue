@@ -8,6 +8,10 @@ module.exports = {
       .required(),
     password: Joi.string()
       .required()
-      .min(6)
+      .min(6),
+    avatar: Joi.any()
+
+      .meta({ swaggerType: 'file' })
+      .description('arquivo de imagem do avatar')
   }
 }

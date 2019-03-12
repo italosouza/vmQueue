@@ -8,8 +8,8 @@ const validate = require('express-validation')
 const validators = require('./app/validators')
 const handler = require('express-async-handler')
 
-// const multerConfig = require('./config/multer')
-// const upload = require('multer')(multerConfig)
+const multerConfig = require('./config/multer')
+const upload = require('multer')(multerConfig)
 
 /**
  * MIDDLEWARES
@@ -26,11 +26,17 @@ const controllers = require('./app/controllers')
  */
 
 // usuario
-routes.post('/user', validate(validators.User), handler(controllers.UserController.store))
+routes.post(
+  '/user',
+  upload.single('avatar'),
+  validate(validators.User),
+  handler(controllers.UserController.store)
+)
+
 routes.post('/session', validate(validators.Session), handler(controllers.SessionController.store))
 
 // routes.post('/user', upload.single('avatar'), controllers.UserController.store)
-// routes.get('/files/:file', controllers.FileController.show)
+routes.get('/files/:file', controllers.FileController.show)
 
 // rotas a sequir requerem Token de autenticação
 routes.use(authMiddleware)

@@ -53,7 +53,7 @@ body {
   margin-bottom: 20px;
 }
 
-.auth-wrapper form input:not([type="checkbox"]) {
+.auth-wrapper form input:not([type='checkbox']) {
   height: 40px;
   padding: 0 15px;
   border: 1px solid #eee;
@@ -63,11 +63,11 @@ body {
   color: #444;
 }
 
-.auth-wrapper form input:not([type="checkbox"]):focus {
+.auth-wrapper form input:not([type='checkbox']):focus {
   border-color: #c1b2f3;
 }
 
-.auth-wrapper form label[for="avatar"] {
+.auth-wrapper form label[for='avatar'] {
   width: 80px;
   height: 80px;
   background: #eee;
@@ -80,23 +80,23 @@ body {
   overflow: hidden;
 }
 
-.auth-wrapper form label[for="avatar"] img.preview {
+.auth-wrapper form label[for='avatar'] img.preview {
   width: 100%;
   min-height: 100%;
 }
 
-.auth-wrapper form label[for="provider"] {
+.auth-wrapper form label[for='provider'] {
   margin: 5px 0 10px;
   font-size: 13px;
   color: #444;
   align-self: center;
 }
 
-.auth-wrapper form label[for="provider"] input {
+.auth-wrapper form label[for='provider'] input {
   margin-right: 2px;
 }
 
-.auth-wrapper form input[type="file"] {
+.auth-wrapper form input[type='file'] {
   display: none;
 }
 
@@ -207,10 +207,11 @@ ul.providers {
   list-style: none;
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
 }
 
 .provider {
-  padding: 20px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -245,14 +246,70 @@ ul.providers {
   color: #fff;
 }
 
+.vm {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flow-root;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vm div {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.vm span.ip {
+  padding-left: 10px;
+}
+
+.vm div.ocupado {
+  border: 1px solid red;
+}
+.vm div.ocupado strong,
+.vm div.ocupado span.ip {
+  color: #ccc;
+}
+
+.vm img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.vm strong {
+  margin-left: 15px;
+  color: #444;
+}
+
+.vm a {
+  background: #7159c1;
+  padding: 5px 10px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 4px;
+  color: #fff;
+}
+
 .alert {
   width: 100%;
   padding: 8px 15px;
   border-radius: 4px;
-  background: #f38888;
+  background: #f59f9f;
   border: 1px solid #de6d6d;
   color: rgba(0, 0, 0, 0.6);
   margin-bottom: 10px;
+}
+
+.alert-login {
+  margin-top: 5px;
 }
 
 .alert-success {
@@ -291,9 +348,9 @@ ul.providers {
   width: 100%;
 }
 
-.main-wrapper .content form button {
+.main-wrapper .content button {
   width: 100%;
-  height: 40px;
+  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import api from 'services/api'
+import { login, isAuthenticated } from 'services/auth'
 
-import 'styles/main.css'
+import 'assets/styles/main.css'
 
 export default class Login extends Component {
-  state = {
-    dados: {}
+  constructor(props) {
+    super(props)
+    this.state = {}
+
+    if (isAuthenticated()) {
+      this.props.history.push('/')
+    }
   }
 
   handleInputChange = event => {
@@ -14,42 +20,48 @@ export default class Login extends Component {
     const name = target.name
 
     const dados = { ...this.state.dados, [name]: value }
-    this.setState({ dados: dados })
+    this.setState({ dados })
   }
 
   handleSubmit = e => {
     e.preventDefault()
     const { dados } = this.state
 
-    api.post('/login', dados).then(user => {
-      console.log(dados)
-      if (!user.name) return
-      localStorage.setItem('@GoTwitter:username', user.name)
-      this.props.history.push('/queue')
-    })
+    api
+      .post('/session', dados)
+      .then(res => {
+        if (!res.data.token) return
+        login(res.data)
+        this.props.history.push('/queue')
+      })
+      .catch(response => {
+        this.setState(response.data)
+      })
   }
 
   render() {
+    const { error } = this.state
+
     return (
-      <div className="login-wrapper">
+      <div className="auth-wrapper">
         <form onSubmit={this.handleSubmit}>
           <input
-            value={this.state.dados.email}
             onChange={this.handleInputChange}
             name="email"
             placeholder="Email"
             required
-            // type="email"
+            type="email"
           />
           <input
-            value={this.state.dados.pasword}
             onChange={this.handleInputChange}
             name="password"
             placeholder="Senha"
             required
             type="password"
+            autoComplete="off"
           />
           <button type="submit">Entrar</button>
+          {error ? <div className="alert alert-login">{error}</div> : null}
         </form>
       </div>
     )

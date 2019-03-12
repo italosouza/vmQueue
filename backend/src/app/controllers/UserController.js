@@ -8,6 +8,9 @@ class UserController {
       return res.status(400).json({ error: 'Usuário já cadastrado' })
     }
 
+    const { filename: avatar } = req.file
+    req.body.avatar = avatar
+
     const user = await User.create(req.body)
     return res.json(user)
   }

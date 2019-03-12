@@ -2,6 +2,9 @@ require('dotenv').config()
 
 const express = require('express')
 const path = require('path')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 
 const mongoose = require('mongoose')
 const databaseConfig = require('./config/database')
@@ -32,7 +35,10 @@ class App {
   }
 
   middlewares() {
-    this.express.use(express.json())
+    this.express.use(cors())
+    this.express.use(bodyParser.urlencoded({ extended: true }))
+    this.express.use(bodyParser.json())
+    this.express.use(methodOverride())
     this.express.use(Sentry.Handlers.requestHandler())
     this.express.use(express.static(path.resolve(__dirname, 'public')))
   }
