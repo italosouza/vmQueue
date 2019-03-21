@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from './auth'
+import { getToken, logout } from './auth'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000'
@@ -21,8 +21,8 @@ api.interceptors.response.use(
     // Do something with response error
     if (error.response.status === 401) {
       console.log('unauthorized, logging out ...')
-      // auth.logout()
-      // router.replace('/auth/login')
+      logout()
+      // router.replace('/')
     }
     return Promise.reject(error.response)
   }

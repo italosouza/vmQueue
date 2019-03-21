@@ -42,7 +42,7 @@ class QueueController {
     }
 
     const model = await Queue.create({ ...req.body, user: req.userId })
-    const queue = await Queue.findById(model._id).populate('user')
+    const queue = await Queue.findById(model._id).populate('user', '-password')
 
     req.io.emit('queue join', queue)
 

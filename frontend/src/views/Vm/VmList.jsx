@@ -1,46 +1,51 @@
-import React from 'react'
-
+import React, { Component } from 'react'
 import api from 'services/api'
 
-// import CustomTable from "components/Table/Table"
-// import { withStyles } from "@material-ui/core/styles"
-
-// import styles from "assets/jss/material/views/PageListStyle"
-
-class VmList extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      rows: [],
-      loading: false
-    }
+export default class Vm extends Component {
+  state = {
+    vm: []
   }
 
-  getDados() {
-    this.setState({ loading: true })
-    api.get(`/vm`).then(res => {
-      const rows = res.data
-      this.setState({ rows, loading: false })
+  async componentDidMount() {
+    const vms = await api.get('/vm').catch(response => {
+      console.warn(response)
     })
+
+    this.setState({ vm: vms.data.docs })
   }
 
-  handleDelete(id) {
-    api.delete(`/api/users/${id}`).then(() => {})
+  handleInputChange = e => {
+    this.setState({ newTweet: e.target.value })
   }
 
-  componentDidMount() {
-    this.getDados()
+  handleNewTweet = async e => {
+    if (e.keyCode !== 13) return
+
+    // await api.post('mv', { content, author })
+    this.setState({ data: '' })
   }
 
   render() {
+    console.log(this.state)
     return (
-      <React.Fragment>
-        <ul className="tweet-list">
-          {this.state.rows.map((item, i) => ({ item }))}
-        </ul>
-      </React.Fragment>
+      <div>
+        <strong>Maquinas Virtuais</strong>
+        <div className="vm">
+          {this.state.vm.map((vm, i) => (
+            <div
+              key={i}
+              className={vm.available ? '' : 'ocupado'}
+              onClick={() => this.handleVmJoin(vm)}
+            >
+              <img src="vm.png" alt="imagem vm" />
+              <strong>{vm.name}</strong>
+              <span className="ip">{vm.ip}</span>
+            </div>
+          ))}
+        </div>
+
+        <ul className="providers" />
+      </div>
     )
   }
 }
-
-export default VmList

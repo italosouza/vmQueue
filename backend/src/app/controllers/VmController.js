@@ -57,10 +57,10 @@ class VmController {
       return res.send()
     }
 
-    const queue = await Queue.findOne({ user: req.userId }).populate('user')
+    const queue = await Queue.findOne({ user: req.userId }).populate('user', '-password')
 
     if (!queue) {
-      return res.json({ error: 'Usuário não estava na fila' })
+      return res.status(400).json({ error: 'Usuário não estava na fila' })
     }
 
     const model = await Vm.findByIdAndUpdate(
@@ -70,6 +70,7 @@ class VmController {
         new: true
       }
     )
+    model.user = queue.user
 
     await Queue.findByIdAndDelete(queue._id)
 

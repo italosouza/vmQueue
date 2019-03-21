@@ -32,8 +32,11 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div className="main-wrapper">
-        {switchRoutes}
-        <button onClick={this.handleLogout}>Sair</button>
+        <div className="content">
+          {switchRoutes}
+          <br />
+          <button onClick={this.handleLogout}>Sair</button>
+        </div>
       </div>
     )
   }

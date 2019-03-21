@@ -269,12 +269,22 @@ ul.providers {
   padding-left: 10px;
 }
 
+.vm span.username {
+  padding-left: 10px;
+}
+
 .vm div.ocupado {
   border: 1px solid red;
+  cursor: pointer;
 }
 .vm div.ocupado strong,
 .vm div.ocupado span.ip {
   color: #ccc;
+}
+
+.vm div.disponivel {
+  /* border: 1px solid blue; */
+  cursor: pointer;
 }
 
 .vm img {

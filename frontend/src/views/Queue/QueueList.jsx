@@ -1,6 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import api from 'services/api'
 import socket from 'socket.io-client'
+import { getUserID, getUser } from 'services/auth'
+
+import Moment from 'react-moment'
+import 'moment-timezone'
+import 'moment/locale/pt-br'
 
 export default class Queue extends Component {
   state = {
@@ -11,10 +16,12 @@ export default class Queue extends Component {
   async componentDidMount() {
     this.subscribeToEvents()
     const vms = await api.get('/vm').catch(response => {
+      this.setState(response.data)
       console.warn(response)
     })
 
     const queues = await api.get('/queue').catch(response => {
+      this.setState(response.data)
       console.warn(response)
     })
     this.setState({ vm: vms.data.docs, queue: queues.data.docs })
@@ -22,12 +29,14 @@ export default class Queue extends Component {
 
   async handleQueueLeave() {
     await api.post('/queue/leave').catch(response => {
+      this.setState(response.data)
       console.warn(response)
     })
   }
 
   async handleQueueJoin() {
     await api.post('/queue/join').catch(response => {
+      this.setState(response.data)
       console.warn(response)
     })
   }
@@ -43,9 +52,6 @@ export default class Queue extends Component {
     })
 
     io.on('vm join', data => {
-      console.log('data do vm join', data)
-      console.log('state', this.state.vm)
-
       const vm = this.state.vm.map(item =>
         item._id === data._id ? data : item
       )
@@ -64,47 +70,65 @@ export default class Queue extends Component {
     })
   }
 
-  handleInputChange = e => {
-    this.setState({ newTweet: e.target.value })
-  }
-
-  handleNewTweet = async e => {
-    if (e.keyCode !== 13) return
-
-    const content = this.state.newTweet
-    const author = localStorage.getItem('@GoTwitter:username')
-
-    await api.post('tweets', { content, author })
-    this.setState({ newTweet: '' })
-  }
-
   async handleVmJoin(vm) {
-    await api.post(`/vm/join/${vm._id}`).catch(response => {
-      console.warn(response)
+    const rota = vm.available ? `/vm/join` : `/vm/leave`
+
+    await api.post(`${rota}/${vm._id}`).catch(response => {
+      this.setState(response.data)
+      console.warn(response.data)
     })
   }
 
+  getAmIQueued() {
+    const userID = getUserID()
+    const queue = this.state.queue.filter(item => {
+      return item.user._id === userID
+    })
+    return queue.length !== 0
+  }
+
   render() {
+    const { error } = this.state
+    const user = getUser()
+
+    const queued = this.getAmIQueued()
+
     return (
-      <div className="content">
+      <Fragment>
+        <ul className="providers">
+          <li className="provider">
+            <div>
+              <img
+                src={`http://localhost:3000/files/${user.avatar}`}
+                alt="Avatar"
+              />
+              <strong>{user.name}</strong>
+            </div>
+          </li>
+        </ul>
         <strong>Maquinas Virtuais</strong>
         <div className="vm">
           {this.state.vm.map((vm, i) => (
             <div
               key={i}
-              className={vm.available ? '' : 'ocupado'}
+              className={vm.available ? 'disponivel' : 'ocupado'}
               onClick={() => this.handleVmJoin(vm)}
             >
               <img src="vm.png" alt="imagem vm" />
               <strong>{vm.name}</strong>
               <span className="ip">{vm.ip}</span>
+              <span className="username">{vm.user ? vm.user.name : ''}</span>
             </div>
           ))}
+          {error ? <div className="alert alert-login">{error}</div> : null}
         </div>
 
         <strong>Fila de espera</strong>
-        <button onClick={this.handleQueueJoin}>Entrar na fila</button>
-        <button onClick={this.handleQueueLeave}>Sair da fila</button>
+        {queued ? (
+          <button onClick={this.handleQueueLeave}>Sair da fila</button>
+        ) : (
+          <button onClick={this.handleQueueJoin}>Entrar na fila</button>
+        )}
 
         <ul className="providers">
           {this.state.queue.map((queue, i) => (
@@ -117,13 +141,15 @@ export default class Queue extends Component {
                 <strong>
                   {queue.user.name}
                   <br />
-                  {queue.createdAt}
+                  <Moment fromNow locale="pt-br">
+                    {queue.createdAt}
+                  </Moment>
                 </strong>
               </div>
             </li>
           ))}
         </ul>
-      </div>
+      </Fragment>
     )
   }
 }
