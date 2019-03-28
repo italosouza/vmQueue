@@ -1,8 +1,9 @@
 {
-  "name": "goweek-frontend",
+  "name": "vmqueue-frontend",
   "version": "1.0.0",
-  "description": "Frontend criado durante evento GoWeek",
+  "description": "front do gerenciador de fila",
   "keywords": [],
+  "homepage": "http://gefin.cc",
   "main": "src/index.js",
   "dependencies": {
     "axios": "0.18.0",
