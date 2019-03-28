@@ -8,4 +8,4 @@ const ioServer = require('./ioServer')(http, appServer)
 appServer.configIoMiddleware(ioServer)
 appServer.routes()
 
-http.listen(process.env.PORT || 3000)
+http.listen(process.env.PORT || 8000)

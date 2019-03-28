@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import api from 'services/api'
 import socket from 'socket.io-client'
 import { getUserID, getUser } from 'services/auth'
+import config from 'config'
 
 import Moment from 'react-moment'
 import 'moment-timezone'
@@ -42,7 +43,7 @@ export default class Queue extends Component {
   }
 
   subscribeToEvents = () => {
-    const io = socket('http://localhost:3000')
+    const io = socket(config.baseURL)
 
     io.on('vm leave', data => {
       const vm = this.state.vm.map(item =>
@@ -99,7 +100,7 @@ export default class Queue extends Component {
           <li className="provider">
             <div>
               <img
-                src={`http://localhost:3000/files/${user.avatar}`}
+                src={`${config.baseURL}/files/${user.avatar}`}
                 alt="Avatar"
               />
               <strong>{user.name}</strong>
@@ -114,7 +115,7 @@ export default class Queue extends Component {
               className={vm.available ? 'disponivel' : 'ocupado'}
               onClick={() => this.handleVmJoin(vm)}
             >
-              <img src="vm.png" alt="imagem vm" />
+              <img src="images/vm.png" alt="imagem vm" />
               <strong>{vm.name}</strong>
               <span className="ip">{vm.ip}</span>
               <span className="username">{vm.user ? vm.user.name : ''}</span>
@@ -135,7 +136,7 @@ export default class Queue extends Component {
             <li className="provider" key={i}>
               <div>
                 <img
-                  src={`http://localhost:3000/files/${queue.user.avatar}`}
+                  src={`${config.baseURL}/files/${queue.user.avatar}`}
                   alt="Avatar"
                 />
                 <strong>

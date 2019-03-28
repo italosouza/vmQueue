@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history'
 import { isAuthenticated } from 'services/auth'
 import Dashboard from 'layouts/Dashboard/Dashboard'
 import Login from 'views/Login/Login'
+import Register from 'views/Register/Register'
 
 // private routes can only be accessed by authed users - No ACL yet
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -29,6 +30,7 @@ const Routes = () => (
   <Router history={hist}>
     <Switch>
       <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
       <PrivateRoute path="/" component={Dashboard} />
     </Switch>
   </Router>

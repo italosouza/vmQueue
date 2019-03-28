@@ -63,3 +63,4 @@ typings/
 # temp file
 tmp
 .vscode
+build

@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { getToken, logout } from './auth'
+import Config from 'config'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: Config.baseURL
 })
 
 api.interceptors.request.use(async config => {
