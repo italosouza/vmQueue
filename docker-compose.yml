@@ -7,16 +7,16 @@ version: '3'
 # docker swarm leave --force
 
 services:
-  product-service:
+  vmqueue-api:
     image: italosouza/vmqueue-api
-    # volumes:
-    #   - datacontainer:/usr/src/app/tmp
+    volumes:
+      - datacontainer:/usr/src/app/tmp
     deploy:
       replicas: 2
       resources:
         limits:
           cpus: "0.1"
-          memory: 100M
+          memory: 150M
       restart_policy:
         condition: on-failure
     ports:
@@ -24,18 +24,24 @@ services:
     env_file:
       - ./backend/.env
     networks:
-      - webnet
+      - backend
+      - frontend
 
-  website:
+  vmqueue-app:
     image: italosouza/vmqueue-app
-    # volumes:
-      # - ./website:/var/www/html
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 100M
     ports:
       - 80:80
     depends_on:
-      - product-service
+      - vmqueue-api
     networks:
-      - webnet
+      - backend
+      - frontend
 
   redis:
     image: redis
@@ -46,9 +52,13 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
     command: redis-server --appendonly yes
     networks:
-      - webnet
+      - backend
 
   visualizer:
     image: dockersamples/visualizer:stable
@@ -59,8 +69,17 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
     networks:
-      - webnet
+      - backend
+      - frontend
 
 networks:
-  webnet:
+  backend:
+  frontend:
+
+volumes:
+  datacontainer:
